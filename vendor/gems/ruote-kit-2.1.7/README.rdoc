@@ -1,0 +1,175 @@
+= ruote-kit (RESTful ruote & middleware)
+
+* http://kit.rubyforge.org/ruote (soon)
+* http://kit.rubyforge.org/ruote/rdoc (soon)
+
+A RESTful wrapper around the ruote[http://ruote.rubyforge.org] workflow engine,
+built as a modular sinatra[http://www.sinatrarb.com/] application.
+
+Follow development:
+
+* #ruote on Freenode
+* http://groups.google.com/group/openwferu-users
+* http://opensourcery.co.za
+* @kennethkalmer on Twitter
+
+== Alpha Status
+
+ruote-kit is under heavy development and will likely change violently over the
+coming weeks (albeit for the better).
+
+Dependencies you currently need is:
+
+* bundler 0.9.5 or later (gem install bundler)
+* sinatra
+* sinatra-respond_to
+* haml
+* json
+* rspec (only to run the specs)
+
+ruote-kit uses bundler to setup and maintain its environment. Before running
+ruote-kit for the first time you need to install bundler and then run:
+
+  $ bundle install
+
+Bundler will download all the required gems and install them for you. To
+bundle the gems you can simply run 'bundle lock' and all the gems will be
+unpacked in .bundle
+
+== Getting started quickly
+
+Once you have the dependencies installed, get going by running 'rackup'
+from inside the ruote-kit project.
+
+If ruote-kit starts up without any issues (ie missing dependencies), you can
+point your browser to 'http://localhost:9292/_ruote/' to get going. By default ruote-kit
+binds to all IP addresses, so this works out the box remotely too.
+
+== Plugging ruote-kit into your rack-stack
+
+ruote-kit is fully self-sufficient piece of rack, but can be slotted into any
+rack middleware stack without issues.
+
+Example:
+
+  RuoteKit.configure do |config|
+    # make changes if needed
+    # Register participants if needed
+    config.register do
+      participant :toto do |wi|
+        # ...
+      end
+      # register the catchall participant if needed
+      require 'ruote/part/storage_participant'
+      catchall Ruote::StorageParticipant
+    end
+  end
+
+
+  # Slot into the stack
+  use RuoteKit::Application
+
+=== Notes for Rails
+
+See http://github.com/tosch/ruote-on-rails for an example Rails app.
+
+== Configuring ruote-kit & ruote
+
+ruote-kit can be configured using RuoteKit#configure, after which it will start
+the engine. From that point the engine is accessible through RuoteKit.engine.
+
+Without any configuration ruote-kit will use file system persistence, and save
+the work in a sub-folder of the current working directory named +work_<env>+,
+where +env+ is the RACK_ENV or RAILS_ENV.
+
+=== Registration of participants
+
+ruote participants may be registered within the block given to
+RuoteKit#configure by the RuoteKit::Configuration#register method. It expects a
+block containing of +participant+ and one or less +catchall+ calls (see example
+above).
+
+Note that all +participant+ calls after a +catchall+ one are pretty useless:
+The catchall will eat all their cookies.
+
+== The +workitems+ resource
+
+The +workitems+ resource relies on the Ruote::StorageParticipant. You'll have to
+register at least one Storage Participant if you ever want to see a workitem in
+the resource. Example:
+
+  require 'ruote/part/storage_participant'
+  RuoteKit.engine.register_participant :storage, Ruote::StorageParticipant
+
+You may also use the catchall participant provided by RuoteKit. It's named '.+',
+so it will catch all workitems for any participant mentioned in your workflow
+definitions which are not already caught by another (previously) registered
+participant. So make sure to register the catchall after your own participants.
+The catchall participant may be registered by calling
+
+  catchall
+
+within the block given to RuoteKit::Configuration#register (this will use
+Ruote::StorageParticipant as participant implementation, you may use any options
+of Ruote::Engine#register_participant to overwrite that default -- see the
+example above).
+
+== Running workers
+
+If you're using ruote-kit as part of your rack stack you'll need to start at
+least one worker separately or the workflows will be executed. You won't need
+more than one worker unless you are running hundreds of processes at the same
+time.
+
+To run a worker you need to setup a worker scripts similar to the rake example
+below:
+
+  require 'rake'
+  require 'ruote-kit'
+
+  desc "Run a ruote-kit worker"
+  task :ruote_kit_worker do
+
+    RuoteKit.configure do |config|
+      # Setup your configuration
+    end
+
+    RuoteKit.run_worker!
+  end
+
+This will only work correctly if using the default file system persistence.
+Support for ruote-couch[http://github.com/jmettraux/ruote-couch] is coming
+soon.
+
+== Feedback & bug reports
+
+Please bear in mind that the project is still in its alpha days. Keep bug reports
+and suggestions limited to the google group and #ruote channel, at least for the
+time being.
+
+Please do not hesitate to come back with *any* feedback.
+
+== License
+
+(The MIT License)
+
+Copyright (c) 2009-2010 Kenneth Kalmer (Internet Exchange CC, Clear Planet Information Solutions Pty Ltd)
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

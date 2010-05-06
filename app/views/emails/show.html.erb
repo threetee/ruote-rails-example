@@ -1,0 +1,12 @@
+<p>
+  <b>Address:</b>
+  <%=h @email.address %>
+</p>
+<p>
+  <b>Status:</b>
+  <%=h @email.state %>
+</p>
+
+
+<%= link_to 'Edit', edit_email_path(@email) %> |
+<%= link_to 'Back', emails_path %>

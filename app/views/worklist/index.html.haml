@@ -1,0 +1,14 @@
+.workitems 
+  - @workitems.each do |wi| 
+    %div[wi]
+      %ul
+        - wi.fields.keys.each do |field|
+          %li= "#{field} = #{wi.fields[field]}"
+          
+%div
+  %pre
+    = @workitems.inspect
+      
+/ .ruote
+/   %div
+/     = @ruote.inspect
