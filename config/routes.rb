@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :account_application_forms
+  map.resources :ndas
+
   map.resources :emails
   map.resources :workitems
   map.connect 'worklist', :controller => :worklist, :action => 'index'
