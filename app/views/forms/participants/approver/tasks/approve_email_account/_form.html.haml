@@ -1,0 +1,22 @@
+- email = Email.find(@workitem.fields['object_id'])
+
+%p
+  Please approve:
+
+%p
+  %strong Email:
+  = email.address
+%p
+  %strong Account Application Form:
+  = image_tag email.account_application_form.attachment.url(:medium) if email.account_application_form
+%p
+  %strong NDA:
+  = image_tag email.nda.attachment.url(:medium) if email.nda
+
+- form_for email, :url => "/emails/#{email.id}/approve", :method => :put, :html => { :multipart => true } do |form|
+  = form.hidden_field 'fei_id', :value => @workitem.fei.to_storage_id
+  = form.submit 'Approve'
+
+- form_for email, :url => "/emails/#{email.id}/reject", :method => :put, :html => { :multipart => true } do |form|
+  = form.hidden_field 'fei_id', :value => @workitem.fei.to_storage_id
+  = form.submit 'Reject'

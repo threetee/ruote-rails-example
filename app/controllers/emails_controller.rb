@@ -106,7 +106,37 @@ class EmailsController < ApplicationController
       format.html { redirect_to @email }
     end
   end
+  
+  def approve
+    @email = Email.find(params[:id])
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:email][:fei_id]) )
+      workitem = RuoteKit.storage_participant[fei]
+    end
 
+    if @email.approve
+      RuoteKit.storage_participant.reply(workitem)
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to @email }
+    end
+  end
+  
+  def reject
+    @email = Email.find(params[:id])
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:email][:fei_id]) )
+      workitem = RuoteKit.storage_participant[fei]
+    end
+
+    @email.reject
+    workitem.fields['account_denied'] = true
+    RuoteKit.storage_participant.reply(workitem)
+    
+    respond_to do |format|
+      format.html { redirect_to @email }
+    end
+  end
+  
   # DELETE /emails/1
   # DELETE /emails/1.xml
   def destroy

@@ -2,7 +2,13 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :account_application_forms
   map.resources :ndas
 
-  map.resources :emails, :member => { :accept_forms => :put, :reject_forms => :put }
+  map.resources :emails,
+                :member => {
+                  :accept_forms => :put,
+                  :reject_forms => :put,
+                  :approve => :put,
+                  :reject => :put
+                }
   map.resources :workitems
   map.connect 'worklist', :controller => :worklist, :action => 'index'
 

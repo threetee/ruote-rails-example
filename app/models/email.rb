@@ -21,7 +21,7 @@ class Email < ActiveRecord::Base
       reviewer :task => 'review_forms'
       rewind :if => '${forms_not_ok}'
       approver :task => 'approve_email_account'
-      rewind :if => '${not_approved}'
+      cancel_process :if => '${account_denied}'
       # concurrence do
       #   kitty :command => '/sample/quote'
       #   ashley :command => '/sample/quote'
@@ -43,6 +43,14 @@ class Email < ActiveRecord::Base
       transition :pending => :forms_accepted
     end
     
+    event :approve do
+      transition :forms_accepted => :approved
+    end
+    
+    event :reject do
+      transition :forms_accepted => :rejected
+    end
+    
     state :pending do
     end
     
@@ -50,6 +58,9 @@ class Email < ActiveRecord::Base
     end
     
     state :approved do
+    end
+    
+    state :rejected do
     end
     
     state :active do
