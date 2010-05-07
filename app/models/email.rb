@@ -40,7 +40,11 @@ class Email < ActiveRecord::Base
   
   def ruote_create_email
     logger.debug("pdef = #{PDEF_CREATE_EMAIL}")
-    self.wfid = RuoteKit.engine.launch(PDEF_CREATE_EMAIL, :address => address, :email_id => id)
+    self.wfid = RuoteKit.engine.launch(PDEF_CREATE_EMAIL, :address => address, :object_type => :email, :object_id => id)
     self.save
+  end
+  
+  def name
+    address
   end
 end
