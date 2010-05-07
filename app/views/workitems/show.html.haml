@@ -1,0 +1,4 @@
+%div[@workitem]
+  %ul
+    - @workitem.fields.keys.each do |field|
+      %li= "#{field} = #{@workitem.fields[field]}"

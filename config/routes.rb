@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :emails
+  map.resources :workitems
   map.connect 'worklist', :controller => :worklist, :action => 'index'
 
   # The priority is based upon order of creation: first created -> highest priority.

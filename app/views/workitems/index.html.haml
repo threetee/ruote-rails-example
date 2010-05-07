@@ -1,0 +1,21 @@
+.workitems
+  %table{:border => 1}
+    %tr
+      %th ID
+      %th Current Participant
+      %th Task
+      %th FEI Storage ID
+      %th Fields
+      %th Actions
+    - @workitems.each do |wi| 
+      %tr
+        %td= wi.id
+        %td= wi.participant_name
+        %td= wi.fields['params']['task']
+        %td= wi.fei.to_storage_id
+        %td
+          %ul
+            - wi.fields.keys.each do |field|
+              %li= "#{field} = #{wi.fields[field]}"
+        %td
+          = link_to 'Show', { :controller => 'workitems', :action => :show, :id => wi.fei.to_storage_id }
