@@ -1,0 +1,11 @@
+%p
+  %b
+    Address:
+  = h @email.address
+%p
+  %b
+    Status:
+  = h @email.state
+= link_to 'Edit', edit_email_path(@email)
+|
+= link_to 'Back', emails_path

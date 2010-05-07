@@ -1,0 +1,13 @@
+%h1
+  Editing email
+- form_for(@email) do |f|
+  = f.error_messages
+  %p
+    = f.label :address
+    %br
+    = f.text_field :address
+  %p
+    = f.submit 'Update'
+= link_to 'Show', @email
+|
+= link_to 'Back', emails_path

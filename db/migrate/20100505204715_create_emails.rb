@@ -3,6 +3,7 @@ class CreateEmails < ActiveRecord::Migration
     create_table :emails do |t|
       t.string :address
       t.string :state, :default => 'pending'
+      t.string :wfid
 
       t.timestamps
     end

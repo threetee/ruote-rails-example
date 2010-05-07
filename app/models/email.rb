@@ -1,10 +1,15 @@
 class Email < ActiveRecord::Base
+  attr_accessible :address, :wfid
+  
   PDEF_CREATE_EMAIL = Ruote.process_definition :name => 'create_email' do
-    cursor do 
-      requestor
-      reviewer
-      rewind :if => '${review_not_ok}'
-      # approver
+    cursor do
+      concurrence do
+        requestor :task => 'upload_application_form'
+        requestor :task => 'upload_nda'
+      end
+      reviewer :task => 'review_forms'
+      rewind :if => '${forms_not_ok}'
+      approver
       rewind :if => '${not_approved}'
       # concurrence do
       #   kitty :command => '/sample/quote'
@@ -33,8 +38,9 @@ class Email < ActiveRecord::Base
     end
   end
   
-  def self.ruote_create_email(email)
+  def ruote_create_email
     logger.debug("pdef = #{PDEF_CREATE_EMAIL}")
-    RuoteKit.engine.launch(PDEF_CREATE_EMAIL, :email => email)
+    self.wfid = RuoteKit.engine.launch(PDEF_CREATE_EMAIL, :address => address, :email_id => id)
+    self.save
   end
 end
