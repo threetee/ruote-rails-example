@@ -1,6 +1,7 @@
 class CreateAccountApplicationForms < ActiveRecord::Migration
   def self.up
     create_table :account_application_forms do |t|
+      t.references :email
       t.string :name
       t.timestamps
     end

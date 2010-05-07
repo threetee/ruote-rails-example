@@ -1,0 +1,14 @@
+- email = Email.find(@workitem.fields['object_id'])
+- unless email.account_application_form
+  - email.account_application_form = AccountApplicationForm.new
+
+%p
+  Upload your completed Account Application Form:
+  
+- form_for email, :html => { :multipart => true } do |form|
+  = form.hidden_field 'fei_id', :value => @workitem.fei.to_storage_id
+  - form.fields_for :account_application_form do |builder|
+    %p
+      = builder.file_field :attachment
+  %p
+    = form.submit

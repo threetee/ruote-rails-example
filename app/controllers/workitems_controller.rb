@@ -9,4 +9,9 @@ class WorkitemsController < ApplicationController
     end
   end
 
+  def edit
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:id]) )
+      @workitem = RuoteKit.storage_participant[fei]
+    end
+  end
 end

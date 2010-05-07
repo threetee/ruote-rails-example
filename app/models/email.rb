@@ -1,18 +1,26 @@
 class Email < ActiveRecord::Base
-  attr_accessible :address, :wfid
+  attr_accessible :address, :wfid, :nda
+  attr_accessible :account_application_form, :account_application_form_attributes
+  attr_accessible :nda, :nda_attributes
   
-  belongs_to :nda
-  belongs_to :account_application_form
+  # belongs_to :nda
+  # belongs_to :account_application_form
+  has_one :nda
+  has_one :account_application_form
+  
+  accepts_nested_attributes_for :account_application_form, :nda
+  
+  validates_uniqueness_of :address
   
   PDEF_CREATE_EMAIL = Ruote.process_definition :name => 'create_email' do
     cursor do
       concurrence do
-        requestor :task => 'upload_application_form'
+        requestor :task => 'upload_account_application_form'
         requestor :task => 'upload_nda'
       end
       reviewer :task => 'review_forms'
       rewind :if => '${forms_not_ok}'
-      approver
+      approver :task => 'approve_email_account'
       rewind :if => '${not_approved}'
       # concurrence do
       #   kitty :command => '/sample/quote'
@@ -31,7 +39,17 @@ class Email < ActiveRecord::Base
       transition any => :active
     end
     
+    event :accept_forms do
+      transition :pending => :forms_accepted
+    end
+    
     state :pending do
+    end
+    
+    state :forms_accepted do
+    end
+    
+    state :approved do
     end
     
     state :active do

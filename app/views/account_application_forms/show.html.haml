@@ -3,6 +3,10 @@
 %p
   %strong Name:
   =h @account_application_form.name
+%p
+  %strong Account Application Form:
+  = image_tag @account_application_form.attachment.url if @account_application_form.attachment
+  
 
 %p
   = link_to "Edit", edit_account_application_form_path(@account_application_form)

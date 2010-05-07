@@ -59,9 +59,13 @@ class EmailsController < ApplicationController
   # PUT /emails/1.xml
   def update
     @email = Email.find(params[:id])
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:email][:fei_id]) )
+      workitem = RuoteKit.storage_participant[fei]
+    end
 
     respond_to do |format|
       if @email.update_attributes(params[:email])
+        RuoteKit.storage_participant.reply(workitem)
         flash[:notice] = 'Email was successfully updated.'
         format.html { redirect_to(@email) }
         format.xml  { head :ok }
@@ -69,6 +73,37 @@ class EmailsController < ApplicationController
         format.html { render :action => "edit" }
         format.xml  { render :xml => @email.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+  
+  def accept_forms
+    @email = Email.find(params[:id])
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:email][:fei_id]) )
+      workitem = RuoteKit.storage_participant[fei]
+    end
+    
+    if @email.accept_forms
+      workitem.fields['forms_not_ok'] = false
+      RuoteKit.storage_participant.reply(workitem)
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to @email }
+    end
+  end
+  
+  def reject_forms
+    @email = Email.find(params[:id])
+    if ( fei = Ruote::FlowExpressionId.from_id(params[:email][:fei_id]) )
+      workitem = RuoteKit.storage_participant[fei]
+    end
+
+    workitem.fields['forms_not_ok'] = true
+    
+    RuoteKit.storage_participant.reply(workitem)
+    
+    respond_to do |format|
+      format.html { redirect_to @email }
     end
   end
 

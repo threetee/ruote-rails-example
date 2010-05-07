@@ -1,11 +1,16 @@
 %p
-  %b
-    Address:
+  %strong Address:
   = h @email.address
 %p
-  %b
-    Status:
+  %strong Status:
   = h @email.state
+%p
+  %strong Account Application Form:
+  = image_tag @email.account_application_form.attachment.url(:medium) if @email.account_application_form
+%p
+  %strong NDA:
+  = image_tag @email.nda.attachment.url(:medium) if @email.nda
+  
 = link_to 'Edit', edit_email_path(@email)
 |
 = link_to 'Back', emails_path

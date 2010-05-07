@@ -24,3 +24,6 @@
         /       %li= "#{field} = #{wi.fields[field]}"
         %td
           = link_to 'Show', { :controller => 'workitems', :action => :show, :id => wi.fei.to_storage_id }
+          |
+          = link_to 'Edit', { :controller => 'workitems', :action => :edit, :id => wi.fei.to_storage_id }
+          

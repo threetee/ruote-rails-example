@@ -7,3 +7,4 @@ db/schema.rb
 db/*.sqlite3
 *.DS_Store
 *.swp
+public/system/*
