@@ -41,10 +41,10 @@ class EmailsController < ApplicationController
   # POST /emails.xml
   def create
     @email = Email.new(params[:email])
-    Email.ruote_create_email(params[:email][:address])
 
     respond_to do |format|
       if @email.save
+        @email.ruote_create_email
         flash[:notice] = 'Email was successfully created.'
         format.html { redirect_to(@email) }
         format.xml  { render :xml => @email, :status => :created, :location => @email }
