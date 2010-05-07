@@ -22,11 +22,11 @@ class Email < ActiveRecord::Base
       rewind :if => '${forms_not_ok}'
       approver :task => 'approve_email_account'
       cancel_process :if => '${account_denied}'
-      # concurrence do
-      #   kitty :command => '/sample/quote'
-      #   ashley :command => '/sample/quote'
-      # end
-      # copper :command => '/sample/quote'
+      concurrence do
+        kitty :command => '/sample/quote'
+        ashley :command => '/sample/quote'
+      end
+      copper :command => '/sample/quote'
     end
   end
   

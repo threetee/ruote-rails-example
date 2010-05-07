@@ -22,6 +22,7 @@ Rails::Initializer.run do |config|
 
   config.gem 'state_machine'
   config.gem 'paperclip'
+  config.gem 'ruote-amqp'
   
   # use RuoteKit for easy Ruote integration
   config.gem 'ruote-kit'

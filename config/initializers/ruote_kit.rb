@@ -13,29 +13,27 @@ RuoteKit.configure do |config|
     # participant 'alice', Ruote::StorageParticipant
 
     # Requestor must submit account app and NDA forms
-    participant :requestor, Ruote::StorageParticipant do |workitem|
-      logger.debug "workitem before form submission = #{workitem.inspect}"
-      # Submit account application form
-      workitem.fields['account_application'] = "This is the account app form"    # Can this be an AR object?
-      # Submit NDA form
-      workitem.fields['nda'] = "This is the NDA"
-      logger.debug "workitem after form submission = #{workitem.inspect}"
-    end
+    participant :requestor, Ruote::StorageParticipant
     
     # Reviewer must make sure account app and NDA forms are completely filled out
-    participant :reviewer, Ruote::StorageParticipant do |workitem|
-      logger.debug "reviewing forms"
-      logger.debug "workitem = #{workitem.inspect}"
-      if (workitem.fields['account_application'] && workitem.fields['nda'])
-        unless ( (workitem.fields['account_application'] == "This is the account app form" &&
-              workitem.fields['nda'] == "This is the NDA") )
-          workitem.fields['forms_not_ok'] = true
-        end
-      end
-    end
+    participant :reviewer, Ruote::StorageParticipant
 
-    participant :approver, Ruote::StorageParticipant do |workitem|
-    end
+    # Approver has final say over whether or not account is created
+    participant :approver, Ruote::StorageParticipant
+    
+    amqp = RuoteAMQP::Participant.new(:default_queue => 'work1')
+    
+    # Ingress mail servers are named ashley and kitty
+    amqp.map_participant('ashley', 'ingress_work1')
+    amqp.map_participant('kitty', 'ingress_work1')
+    
+    # Mailbox server is copper
+    amqp.map_participant('copper', 'mailbox_work1')
+
+    participant :ashley, amqp
+    participant :kitty, amqp
+
+    participant :copper, amqp
     
     # register the catchall storage participant named '.+'
     catchall
