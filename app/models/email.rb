@@ -1,6 +1,9 @@
 class Email < ActiveRecord::Base
   attr_accessible :address, :wfid
   
+  belongs_to :nda
+  belongs_to :account_application_form
+  
   PDEF_CREATE_EMAIL = Ruote.process_definition :name => 'create_email' do
     cursor do
       concurrence do
