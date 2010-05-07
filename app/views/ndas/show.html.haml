@@ -1,0 +1,12 @@
+- title "Nda"
+
+%p
+  %strong Name:
+  =h @nda.name
+
+%p
+  = link_to "Edit", edit_nda_path(@nda)
+  |
+  = link_to "Destroy", @nda, :confirm => 'Are you sure?', :method => :delete
+  |
+  = link_to "View All", ndas_path

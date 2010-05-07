@@ -1,0 +1,13 @@
+- title "Ndas"
+
+%table
+  %tr
+    %th Name
+  - for nda in @ndas
+    %tr
+      %td= h nda.name
+      %td= link_to 'Show', nda
+      %td= link_to 'Edit', edit_nda_path(nda)
+      %td= link_to 'Destroy', nda, :confirm => 'Are you sure?', :method => :delete
+
+%p= link_to "New Nda", new_nda_path

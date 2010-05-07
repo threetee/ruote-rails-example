@@ -1,0 +1,13 @@
+- title "Account Application Forms"
+
+%table
+  %tr
+    %th Name
+  - for account_application_form in @account_application_forms
+    %tr
+      %td= h account_application_form.name
+      %td= link_to 'Show', account_application_form
+      %td= link_to 'Edit', edit_account_application_form_path(account_application_form)
+      %td= link_to 'Destroy', account_application_form, :confirm => 'Are you sure?', :method => :delete
+
+%p= link_to "New Account Application Form", new_account_application_form_path
