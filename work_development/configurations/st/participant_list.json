@@ -1,0 +1,1 @@
+{"list":[["^requestor$",["Ruote::StorageParticipant",{}]],["^reviewer$",["Ruote::StorageParticipant",{}]],["^approver$",["Ruote::StorageParticipant",{}]],["^.+$",["Ruote::StorageParticipant",{}]]],"_rev":15,"put_at":"2010-05-07 08:55:24.258050 UTC","_id":"participant_list","type":"configurations"}
