@@ -29,11 +29,14 @@ RuoteKit.configure do |config|
       if (workitem.fields['account_application'] && workitem.fields['nda'])
         unless ( (workitem.fields['account_application'] == "This is the account app form" &&
               workitem.fields['nda'] == "This is the NDA") )
-          workitem.fields['review_not_ok'] = true
+          workitem.fields['forms_not_ok'] = true
         end
       end
     end
 
+    participant :approver, Ruote::StorageParticipant do |workitem|
+    end
+    
     # register the catchall storage participant named '.+'
     catchall
   end
