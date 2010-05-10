@@ -14,6 +14,7 @@ class Email < ActiveRecord::Base
   
   PDEF_CREATE_EMAIL = Ruote.process_definition :name => 'create_email' do
     cursor do
+      requestor_notification :email_subject => "Additional Information Required"
       concurrence do
         requestor :task => 'upload_account_application_form'
         requestor :task => 'upload_nda'
@@ -23,10 +24,10 @@ class Email < ActiveRecord::Base
       approver :task => 'approve_email_account'
       cancel_process :if => '${account_denied}'
       concurrence do
-        kitty :command => '/sample/quote'
-        ashley :command => '/sample/quote'
+        kitty :command => '/sample/quote', :queue => 'ingress_work1'
+        ashley :command => '/sample/quote', :queue => 'ingress_work1'
       end
-      copper :command => '/sample/quote'
+      copper :command => '/sample/quote', :queue => 'mailbox_work1'
     end
   end
   
