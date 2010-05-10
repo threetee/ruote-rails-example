@@ -16,9 +16,9 @@ Installation
 *   clone (or do whatever you like to get the code) this repo:
         $ git clone git://github.com/threetee/ruote-rails-example.git  
         $ cd ruote-rails-example
-*   install gem dependencies if you like (gems are vendored, so you don't
-    have to)
+*   install gem dependencies if you like (gems are vendored, so this step is optional)
         $ rake gems:install
+*   install [daemon-kit](http://github.com/kennethkalmer/daemon-kit) and generate AMQP remote participant daemons using the 'ruote' instance (you will need to install several other prerequisites for this, including Erlang and RabbitMQ)
 
 
 Configuration
@@ -61,10 +61,13 @@ To kick off a sample Ruote workflow, do the following:
 3. Click the edit link for each of the above workitems and upload a sample image. This will complete the workitems required of the 'requestor' participant (see the requestor swimlane in the sample activity diagram). Hit http://localhost:3000/emails to see the state change for the email record.
 4. Check http://localhost:3000/workitems again. You should now see one workitem, this one for the 'reviewer' participant. Click the edit link for this workitem to approve or reject the submitted forms.
 5. Hit http://localhost:3000/workitems once more. If you rejected the submitted forms, the workflow will have been rewound to the requestor participant's tasks, so you will see the two workitems that were presented back in step 2. If you accepted the submitted forms, you will see the workitem for the 'approver' participant. http://localhost:3000/emails should also reflect another state change.
-6. Edit the 'approver' participant's workitem. The 'approver' participant has final say over whether or not the email address should be created. If you (as the approver) deny this workitem, the workflow will terminate and the email's state will be set accordingly. If you approve the workitem, workflow will complete at the moment, but eventually will call AMQP remote participants to provision the email account on various servers.
+6. Edit the 'approver' participant's workitem. The 'approver' participant has final say over whether or not the email address should be created. If you (as the approver) deny this workitem, the workflow will terminate and the email's state will be set accordingly. If you approve the workitem, workflow will continue to the AMQP remote participants.
+7. App will call AMQP remote participants with the default /sample/quote method as provided by the default [daemon-kit](http://github.com/kennethkalmer/daemon-kit) ruote generator. Of course, make sure that you have remote participants running and listening on the appropriate queues.
+8. Workflow will terminate.
+
 
 TODO
 ----
 
-* Implement AMQP
-* Implement email notifications to participants
+* Implement AMQP (done 5/9/10)
+* Implement email notifications to participants (done 5/9/10)

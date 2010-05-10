@@ -17,8 +17,8 @@ RuoteKit.configure do |config|
     participant :requestor_notification, Ruote::SmtpParticipant,
                 :server => 'localhost',
                 :port => 25,
-                :to => 'edennis@r2d2',
-                :from => 'noreply@wb.com',
+                :to => 'threetee@gmail.com',
+                :from => 'noreply@somewhere.com',
                 :notification => true,
                 :template => "Subject: ${f:email_subject}\n\ntest email"
                 
